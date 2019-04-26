@@ -27,14 +27,17 @@ class HomeViewController: UIViewController {
         var pfScore: Double = 0.0
         let docref = Firestore.firestore().document("users/\(email ?? "0")")
         
+        
         docref.getDocument{ (docSnapshot, error) in
-            guard let docSnapshot = docSnapshot, docSnapshot.exists else {return}
+            guard let docSnapshot = docSnapshot, docSnapshot.exists else {
+                docref.setData(["PFScore": 0] as [String: Any])
+                return
+            }
             let myData = docSnapshot.data()
             pfScore = myData!["PFScore"] as? Double ?? 0
             self.PFScore.text = "\(pfScore)"
         }
-        
-        
+                
         // Do any additional setup after loading the view, typically from a nib.
     }
     

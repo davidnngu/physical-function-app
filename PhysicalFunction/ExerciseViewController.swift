@@ -17,6 +17,7 @@ class ExerciseViewController: UITableViewController {
     var endHeart: String?
     
     let email = Auth.auth().currentUser?.email
+    let date = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +45,9 @@ class ExerciseViewController: UITableViewController {
     @IBAction func inputData(_ sender: UIButton) {
         let exerciseData = [initHeart, distance, time, endHeart]
         let docref = Firestore.firestore().document("users/\(email ?? "0")")
+        let newref = docref.collection("Exercise Tests").document("\(date)")
         let dataToSave = ["Exercise Test Data": exerciseData]
-        docref.updateData(dataToSave)
+        newref.setData(dataToSave)
         let success = UIAlertController(title:"SUCCESS", message: "Data has been inputted", preferredStyle: .alert)
         
         // Create Cancel button with action handlder

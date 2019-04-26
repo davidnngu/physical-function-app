@@ -158,7 +158,7 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                     let id = result.identifier
                     var RKResult: ORKQuestionResult?
                     
-                    if (id == "GenderStep" || id == "RaceStep" || id == "EducationStep") {
+                    if (id == "GenderStep" || id == "RaceStep" || id == "EduQuestionStep") {
                         RKResult = result as! ORKChoiceQuestionResult
                         let arrResult = (RKResult!.answer! as! NSArray).mutableCopy() as! NSMutableArray
                         
@@ -201,6 +201,7 @@ public struct surveyResults {
     var isDemo = false
     let userID = Auth.auth().currentUser?.uid
     let email = Auth.auth().currentUser?.email
+    let date = Date()
     
     init(result: ORKTaskResult) {
         allResults = result
@@ -221,12 +222,16 @@ public struct surveyResults {
     
     mutating func sendToFirebase() {
         let docref = Firestore.firestore().document("users/\(email ?? "0")")
+        
         if (isPROMIS == true) {
-            let dataToSave = ["PROMIS PF10": resultsList, "PFScore": resultScore] as [String : Any]
-            docref.updateData(dataToSave)
+            let newref = docref.collection("PROMIS PF10").document("\(date)")
+            let dataToSave = ["PROMIS PF10": resultsList, "PFScore": resultScore] as [String: Any]
+            newref.setData(dataToSave)
+            docref.updateData(["PFScore": resultScore] as [String: Any])
         } else if (isSymptoms == true) {
+            let newref = docref.collection("Symptoms").document("\(date)")
             let dataToSave = ["Symptoms": resultsList] as [String: Any]
-            docref.updateData(dataToSave)
+            newref.setData(dataToSave)
         } else {
             let dataToSave = ["Demographics": resultsList] as [String: Any]
             docref.updateData(dataToSave)
