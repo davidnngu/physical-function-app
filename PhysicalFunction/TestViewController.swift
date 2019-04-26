@@ -63,7 +63,13 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         taskViewController.dismiss(animated: true, completion: nil)
     }
     
-    
+    /*
+     Function to get the survey results when a survey is completed.
+     Calls the corresponding parsing method.
+     Also sends the data to the Firestore database.
+     In: ORKTaskResult
+     Out: surveyResults struct with result data.
+     */
     func getSurveyResults(survey: ORKTaskResult) -> surveyResults {
         let results = survey.results
         var savedResults = surveyResults(result: survey)
@@ -75,18 +81,20 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                 savedResults = parseSymptomSurvey(survey: survey)
             } else if (stepResult.identifier == "DemographicIntroStep") {
                 savedResults = parseDemoSurvey(survey: survey)
-            } else {
-                
             }
         }
+        savedResults.sendToFirebase()
         return savedResults
     }
     
+    /*
+     Function to parse the PROMIS PF10 survey and return the results.
+     In: ORKTaskResult
+     Out: surveyResults struct with result data
+     */
     func parsePFSurvey(survey: ORKTaskResult) -> surveyResults {
-        let tabbar = tabBarController as! DataController
         let results = survey.results
         var savedResults = surveyResults(result: survey)
-        var counter = 0
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "PROMISSummaryStep") {
@@ -94,56 +102,54 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                 savedResults.isPROMIS = true
                 savedResults.isDemo = false
                 savedResults.isSymptoms = false
-                savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "PROMISIntroStep") {
                 for result in stepResult.results! {
                     let RKResult = result as! ORKChoiceQuestionResult
                     let arrResult = (RKResult.answer! as! NSArray).mutableCopy() as! NSMutableArray
-                    
                     savedResults.resultsList.append(arrResult[0] as! NSNumber)
                 }
-                counter += 1
-            } else {
-                
             }
         }
         return savedResults
     }
     
+    /*
+     Function to parse the Symptoms survey and return the results.
+     Also sends the data to the Firestore database.
+     In: ORKTaskResult
+     Out: surveyResults struct with result data
+     */
     func parseSymptomSurvey(survey: ORKTaskResult) -> surveyResults {
         let results = survey.results
         var savedResults = surveyResults(result: survey)
-        var counter = 0
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "SymptomSummaryStep") {
                 savedResults.isSymptoms = true
                 savedResults.isPROMIS = false
                 savedResults.isDemo = false
-                savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "SymptomIntroStep") {
-                
                 for result in stepResult.results! {
                     let RKResult = result as! ORKChoiceQuestionResult
-                    
                     let arrResult = (RKResult.answer! as! NSArray).mutableCopy() as! NSMutableArray
-                    
                     savedResults.resultsList.append(arrResult[0] as! NSNumber)
                 }
-                counter += 1
-            } else {
-                
             }
         }
         return savedResults
     }
     
+    /*
+     Function to parse the Demographics survey and return the results.
+     Also sends the data to the Firestore database.
+     In: ORKTaskResult
+     Out: surveyResults struct with result data
+     */
     func parseDemoSurvey(survey: ORKTaskResult) -> surveyResults {
         let results = survey.results
         var savedResults = surveyResults(result: survey)
-        var counter = 0
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "DemographicSummaryStep") {
@@ -161,34 +167,31 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                     if (id == "GenderStep" || id == "RaceStep" || id == "EduQuestionStep") {
                         RKResult = result as! ORKChoiceQuestionResult
                         let arrResult = (RKResult!.answer! as! NSArray).mutableCopy() as! NSMutableArray
-                        
                         savedResults.resultsList.append(arrResult[0] as! NSString)
                     } else if (id == "NameStep" || id == "DiagnosisStep"){
                         RKResult = result as! ORKTextQuestionResult
                         let arrResult = RKResult!.answer
-                        
                         savedResults.resultsList.append(arrResult as! NSString)
-                        
                     } else if (id == "AgeStep") {
                         RKResult = result as! ORKNumericQuestionResult
                         let arrResult = RKResult!.answer
-                        
                         savedResults.resultsList.append(arrResult as! NSNumber)
                     } else if (id == "DateStep"){
                         RKResult = result as! ORKDateQuestionResult
                         let arrResult = RKResult!.answer
-                        
                         savedResults.resultsList.append(arrResult as! NSDate)
                     }
-                    
                 }
-                counter += 1
             }
         }
         return savedResults
     }
 }
 
+/*
+ Struct to hold survey result data.
+ Contains methods for calculating the raw score, T-score, and sending the data to the Firestore database.
+ */
 public struct surveyResults {
     
     var resultsList = [NSObject]()
@@ -207,6 +210,10 @@ public struct surveyResults {
         allResults = result
     }
     
+    /*
+     Function to calculate the total raw score.
+     Should only be called in calcResultScore()
+     */
     mutating func calcResultTotal() {
         resultTotal = 0
         for result in resultsList {
@@ -214,12 +221,20 @@ public struct surveyResults {
         }
     }
     
+    /*
+     Function to calculate the t-score. Calls convertRawToTScore().
+     Should only be called in ParsePFSurvey()
+     */
     mutating func calcResultScore() {
         calcResultTotal()
         resultScore = convertRawtoTScore(score: resultTotal)
-        
     }
     
+    /*
+     Function to send survey results to Google FireStore database
+     For PROMIS/Symptom survey: Creates new document with timestamp for each time survey is taken
+     For Demographics survey: Creates new document if one does not exist, or updates existing document
+     */
     mutating func sendToFirebase() {
         let docref = Firestore.firestore().document("users/\(email ?? "0")")
         
@@ -238,6 +253,13 @@ public struct surveyResults {
         }
     }
     
+    
+    /*
+     Function to convert raw score from PROMIS Survey.
+     Should only be called in ParsePFSurvey()
+     In: Raw PROMIS survey score (Int)
+     Out: Converted T-score (Double)
+     */
     func convertRawtoTScore(score: Int) -> Double {
         var tScore: Double = 0
         switch score {
@@ -325,7 +347,6 @@ public struct surveyResults {
             tScore = 61.9
         default:
             tScore = 0
-            
         }
         return tScore
     }
