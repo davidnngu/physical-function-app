@@ -73,7 +73,7 @@ class ExerciseViewController: UITableViewController {
         resetButton.alpha = 0.5
         startButton.alpha = 1.0
         pauseButton.alpha = 0.5
-        print("test")
+
         timerLabel.text = "00:00:00.0"
         resetButton.isEnabled = false
         pauseButton.isEnabled = false
@@ -94,7 +94,6 @@ class ExerciseViewController: UITableViewController {
         
         isTimerRunning = false
         timer.invalidate()
-    
     }
     
     @objc func runTimer() {
@@ -140,20 +139,26 @@ class ExerciseViewController: UITableViewController {
 
     }
     @IBAction func inputData(_ sender: UIButton) {
-        let exerciseData = [initHeart, distance, time, endHeart]
-        let docref = Firestore.firestore().document("users/\(email ?? "0")")
-        let newref = docref.collection("Exercise Tests").document("\(date)")
-        let dataToSave = ["Exercise Test Data": exerciseData]
-        newref.setData(dataToSave)
-        let success = UIAlertController(title:"SUCCESS", message: "Data has been inputted", preferredStyle: .alert)
+        if initHeart == nil  || distance == nil || time == nil || endHeart == nil {
+            let fail = UIAlertController(title:"ERROR", message: "One or more fields are empty", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .cancel) { (action) -> Void in
+            }
+            fail.addAction(ok)
+            self.present(fail, animated: true, completion: nil)
+        } else {
+            let exerciseData = [initHeart, distance, time, endHeart]
+            let docref = Firestore.firestore().document("users/\(email ?? "0")")
+            let newref = docref.collection("Exercise Tests").document("\(date)")
+            let dataToSave = ["Exercise Test Data": exerciseData]
+            newref.setData(dataToSave)
         
-        // Create Cancel button with action handlder
-        let worked = UIAlertAction(title: "OK", style: .cancel) { (action) -> Void in
-            print("works!")
+            // Create Cancel button with action handlder
+            let success = UIAlertController(title:"SUCCESS", message: "Data has been inputted", preferredStyle: .alert)
+            let worked = UIAlertAction(title: "OK", style: .cancel) { (action) -> Void in
+            }
+            success.addAction(worked)
+            self.present(success, animated: true, completion: nil)
         }
-        
-        success.addAction(worked)
-        self.present(success, animated: true, completion: nil)
     }
     /*
     // MARK: - Navigation
