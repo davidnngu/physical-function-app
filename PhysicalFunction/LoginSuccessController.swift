@@ -28,8 +28,6 @@ class LoginSuccessController: UIViewController {
         view.addGestureRecognizer(tap)
         view.isUserInteractionEnabled = true
         
-        let docref = Firestore.firestore().document("users/\(email ?? "0")")
-        
         
     }
  
