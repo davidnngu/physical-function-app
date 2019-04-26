@@ -36,9 +36,10 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="spD-Bg-iY5">
-                                <rect key="frame" x="87" y="800" width="229" height="31"/>
+                                <rect key="frame" x="87" y="781" width="229" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.028946934890000001" blue="0.1894849904" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -82,7 +83,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NMB-fh-OEs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-752" y="98"/>
+            <point key="canvasLocation" x="-752.17391304347836" y="97.767857142857139"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="xAe-Na-5SJ">
@@ -93,7 +94,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NrP-Ae-MMt">
-                                <rect key="frame" x="80" y="712" width="254" height="82"/>
+                                <rect key="frame" x="80" y="735" width="254" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.028946934890000001" blue="0.1894849904" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -122,6 +123,7 @@
                                 <rect key="frame" x="80" y="272" width="254" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Sign Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -129,7 +131,7 @@
                                     <action selector="pressedSignUp:" destination="b6D-8v-WZG" eventType="touchUpInside" id="D59-Hy-za6"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="SIGN UP" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="9" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zfc-ge-mIt">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="SIGN UP" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="9" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zfc-ge-mIt">
                                 <rect key="frame" x="148" y="101" width="119" height="53"/>
                                 <fontDescription key="fontDescription" name="KohinoorBangla-Semibold" family="Kohinoor Bangla" pointSize="30"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -139,6 +141,7 @@
                         <color key="backgroundColor" red="0.30112198420000003" green="0.64433155210000004" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Zfc-ge-mIt" firstAttribute="centerX" secondItem="dWK-2f-rPK" secondAttribute="centerX" id="9Yx-We-ZrF"/>
+                            <constraint firstItem="Zfc-ge-mIt" firstAttribute="top" secondItem="dWK-2f-rPK" secondAttribute="top" constant="60" id="tzj-mF-NPm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="dWK-2f-rPK"/>
                     </view>
@@ -166,26 +169,27 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="User" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QXn-ky-jzf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="User" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QXn-ky-jzf">
                                 <rect key="frame" x="28" y="415" width="358" height="66"/>
                                 <fontDescription key="fontDescription" name="KohinoorBangla-Regular" family="Kohinoor Bangla" pointSize="35"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" text="Tap Screen to Continue" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bBk-Zv-PM4">
-                                <rect key="frame" x="87" y="664" width="240" height="128"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Tap Screen to Continue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIx-Z2-R3o">
+                                <rect key="frame" x="103" y="630" width="209" height="67"/>
                                 <fontDescription key="fontDescription" name="KohinoorBangla-Regular" family="Kohinoor Bangla" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.30112198417325386" green="0.64433155207169257" blue="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="ple-QG-jay" firstAttribute="centerX" secondItem="SgD-dG-qB7" secondAttribute="centerX" id="DTv-SR-hPT"/>
-                            <constraint firstItem="bBk-Zv-PM4" firstAttribute="centerX" secondItem="FXL-LS-GMh" secondAttribute="centerX" id="JBn-5T-IZs"/>
                             <constraint firstItem="QXn-ky-jzf" firstAttribute="centerX" secondItem="FXL-LS-GMh" secondAttribute="centerX" id="KNx-nm-shB"/>
+                            <constraint firstItem="QXn-ky-jzf" firstAttribute="top" secondItem="ple-QG-jay" secondAttribute="bottom" constant="70" id="Ups-23-Ee9"/>
                             <constraint firstItem="ple-QG-jay" firstAttribute="centerX" secondItem="FXL-LS-GMh" secondAttribute="centerX" id="VxK-jL-AWL"/>
+                            <constraint firstItem="uIx-Z2-R3o" firstAttribute="top" secondItem="QXn-ky-jzf" secondAttribute="bottom" constant="150" id="dOb-lV-v0e"/>
+                            <constraint firstItem="uIx-Z2-R3o" firstAttribute="centerX" secondItem="FXL-LS-GMh" secondAttribute="centerX" id="kKs-gw-KIx"/>
                             <constraint firstItem="ple-QG-jay" firstAttribute="centerY" secondItem="SgD-dG-qB7" secondAttribute="centerY" constant="-126.5" id="xXa-FW-dW8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="FXL-LS-GMh"/>
