@@ -18,7 +18,7 @@ public extension NSError {
     ///
     /// Also implements a special handling for the Facebook API, which indicates invalid tokens in a 
     /// different manner. See https://developers.facebook.com/docs/graph-api/using-graph-api#errors
-    var isExpiredToken: Bool {
+	public var isExpiredToken: Bool {
         guard self.domain == NSURLErrorDomain else {
             return false
         }

@@ -53,14 +53,12 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
     }
 
     func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        //taskResultFinishedCompletionHandler?(taskViewController.result)
         let results = taskViewController.result
         
         var surveyResults = getSurveyResults(survey: results)
         if (surveyResults.isPROMIS == true) {
             surveyResults.calcResultScore()
         }
-        //showPFScore.text = "\(promisSurveyResults.resultScore)"
         
         taskViewController.dismiss(animated: true, completion: nil)
     }
@@ -69,7 +67,6 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
     func getSurveyResults(survey: ORKTaskResult) -> surveyResults {
         let results = survey.results
         var savedResults = surveyResults(result: survey)
-        //var counter = 0
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "PROMISIntroStep") {
@@ -94,20 +91,17 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         {
             if (stepResult.identifier == "PROMISSummaryStep") {
                 savedResults.calcResultScore()
-                tabbar.valuePFScore = String("\(savedResults.resultScore)")
-                //print(tabbar.valuePFScore)
                 savedResults.isPROMIS = true
+                savedResults.isDemo = false
+                savedResults.isSymptoms = false
                 savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "PROMISIntroStep") {
                 for result in stepResult.results! {
                     let RKResult = result as! ORKChoiceQuestionResult
-                    //print(aResult.answer!)
                     let arrResult = (RKResult.answer! as! NSArray).mutableCopy() as! NSMutableArray
                     
-                    //print(bResult[0])
                     savedResults.resultsList.append(arrResult[0] as! NSNumber)
-//                    print(savedResults.resultsList[counter])
                 }
                 counter += 1
             } else {
@@ -125,6 +119,9 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         {
             if (stepResult.identifier == "SymptomSummaryStep") {
                 savedResults.isSymptoms = true
+                savedResults.isPROMIS = false
+                savedResults.isDemo = false
+                savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "SymptomIntroStep") {
                 
@@ -134,7 +131,6 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                     let arrResult = (RKResult.answer! as! NSArray).mutableCopy() as! NSMutableArray
                     
                     savedResults.resultsList.append(arrResult[0] as! NSNumber)
-//                    print(savedResults.resultsList[counter])
                 }
                 counter += 1
             } else {
@@ -152,6 +148,9 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         {
             if (stepResult.identifier == "DemographicSummaryStep") {
                 savedResults.isDemo = true
+                savedResults.isPROMIS = false
+                savedResults.isSymptoms = false
+                savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "DemographicIntroStep") {
                 
@@ -164,26 +163,22 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
                         let arrResult = (RKResult!.answer! as! NSArray).mutableCopy() as! NSMutableArray
                         
                         savedResults.resultsList.append(arrResult[0] as! NSString)
-//                        print(savedResults.resultsList[counter])
                     } else if (id == "NameStep" || id == "DiagnosisStep"){
                         RKResult = result as! ORKTextQuestionResult
                         let arrResult = RKResult!.answer
                         
                         savedResults.resultsList.append(arrResult as! NSString)
-//                        print(savedResults.resultsList[counter])
                         
                     } else if (id == "AgeStep") {
                         RKResult = result as! ORKNumericQuestionResult
                         let arrResult = RKResult!.answer
                         
                         savedResults.resultsList.append(arrResult as! NSNumber)
-//                        print(savedResults.resultsList[counter])
                     } else if (id == "DateStep"){
                         RKResult = result as! ORKDateQuestionResult
                         let arrResult = RKResult!.answer
                         
                         savedResults.resultsList.append(arrResult as! NSDate)
-//                        print(savedResults.resultsList[counter])
                     }
                     
                 }
@@ -228,13 +223,13 @@ public struct surveyResults {
         let docref = Firestore.firestore().document("users/\(email ?? "0")")
         if (isPROMIS == true) {
             let dataToSave = ["PROMIS PF10": resultsList, "PFScore": resultScore] as [String : Any]
-            docref.setData(dataToSave)
+            docref.updateData(dataToSave)
         } else if (isSymptoms == true) {
             let dataToSave = ["Symptoms": resultsList] as [String: Any]
-            docref.setData(dataToSave)
+            docref.updateData(dataToSave)
         } else {
             let dataToSave = ["Demographics": resultsList] as [String: Any]
-            docref.setData(dataToSave)
+            docref.updateData(dataToSave)
         }
     }
     

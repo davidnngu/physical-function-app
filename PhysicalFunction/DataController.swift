@@ -10,7 +10,7 @@ import UIKit
 
 class DataController: UITabBarController {
 
-    var valuePFScore: String = "0"
+    //var valuePFScore: String = "0"
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -7,9 +7,10 @@ target 'PhysicalFunction' do
 
   # Pods for PhysicalFunction
   pod 'Firebase/Core'
+  pod 'Firebase/Database'
   pod 'FirebaseUI/Auth'
   pod 'FirebaseUI/Email'
-  pod 'OAuthSwift', '~> 1.2.0'
+  pod 'Firebase/Firestore'
   pod 'ResearchKit', '~> 1.0'
 
 

@@ -15,7 +15,6 @@ class HomeViewController: UIViewController {
 
     var myString = String()
 
-    var docref: DocumentReference!
     let userID = Auth.auth().currentUser?.uid
     let email = Auth.auth().currentUser?.email
     
@@ -32,12 +31,9 @@ class HomeViewController: UIViewController {
             guard let docSnapshot = docSnapshot, docSnapshot.exists else {return}
             let myData = docSnapshot.data()
             pfScore = myData!["PFScore"] as? Double ?? 0
-            print(pfScore)
             self.PFScore.text = "\(pfScore)"
         }
         
-        let tabbar = tabBarController as! DataController
-        //PFScore.text = String(describing: tabbar.valuePFScore)
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -48,21 +44,17 @@ class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let tabbar = tabBarController as! DataController
         
         var pfScore: Double = 0.0
         
-        let docref = Firestore.firestore().document("users/\(userID ?? "0")")
+        let docref = Firestore.firestore().document("users/\(email ?? "0")")
         docref.getDocument{ (docSnapshot, error) in
             guard let docSnapshot = docSnapshot, docSnapshot.exists else {return}
             let myData = docSnapshot.data()
             pfScore = myData!["PFScore"] as? Double ?? 0
-            print(pfScore)
             self.PFScore.text = "\(pfScore)"
         }
-        
-        //PFScore.text = String(describing: tabbar.valuePFScore)
-        
+
     }
 
    

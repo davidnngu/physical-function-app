@@ -9,5 +9,5 @@
 import Foundation
 
 public extension Notification.Name {
-    static let OAuthSwiftHandleCallbackURL: Notification.Name = .init("OAuthSwiftCallbackNotificationName")
+    public static let OAuthSwiftHandleCallbackURL: Notification.Name = .init("OAuthSwiftCallbackNotificationName")
 }

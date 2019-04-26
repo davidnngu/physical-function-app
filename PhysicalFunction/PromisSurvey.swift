@@ -39,6 +39,7 @@ public var PromisSurvey: ORKOrderedTask {
         }
         let questAnswerFormat: ORKTextChoiceAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoice)
         let questQuestionStep = ORKQuestionStep(identifier: "QuestionStep\(questionNumber)", title: textChoiceQuestion, answer: questAnswerFormat)
+        questQuestionStep.isOptional = false
         steps += [questQuestionStep]
         questionNumber+=1
         }

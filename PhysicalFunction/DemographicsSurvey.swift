@@ -15,7 +15,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     var steps = [ORKStep]()
     
     //Introduction
-    let instructionStep = ORKInstructionStep(identifier: "IntroStep")
+    let instructionStep = ORKInstructionStep(identifier: "DemographicIntroStep")
     instructionStep.title = "Demographic Survey"
     instructionStep.text = "Answer seven questions to complete the survey."
     steps += [instructionStep]
@@ -25,6 +25,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     nameAnswerFormat.multipleLines = false
     let nameQuestionStepTitle = "What is your name?"
     let nameQuestionStep = ORKQuestionStep(identifier: "NameStep", title: nameQuestionStepTitle, answer: nameAnswerFormat)
+    nameQuestionStep.isOptional = false
     steps += [nameQuestionStep]
     
     //Gender Question
@@ -36,6 +37,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     let questAnswerFormat:
         ORKTextChoiceAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoice)
     let questQuestionStep = ORKQuestionStep(identifier: "GenderStep", title: "What is your gender?", answer: questAnswerFormat)
+    questQuestionStep.isOptional = false
     steps += [questQuestionStep]
     
     //Age Question
@@ -44,6 +46,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     ageAnswer.minimum = 18
     ageAnswer.maximum = 100
     let ageQuestionStep = ORKQuestionStep(identifier: "AgeStep", title: ageQuestion, answer: ageAnswer)
+    ageQuestionStep.isOptional = false
     steps += [ageQuestionStep]
     
     //Diagnosis Question
@@ -51,6 +54,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     nameAnswerFormat.multipleLines = false
     let textQuestionStepTitle = "What is your cancer diagnosis?"
     let textQuestionStep = ORKQuestionStep(identifier: "CancerStep", title: textQuestionStepTitle, answer: textAnswerFormat)
+    textQuestionStep.isOptional = false
     steps += [textQuestionStep]
     
     //Date Question
@@ -63,6 +67,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     let dateQuestion = "What is the date of your diagnosis?"
     let dateAnswer = ORKDateAnswerFormat.dateAnswerFormat(withDefaultDate: defaultDate, minimumDate: minDate, maximumDate: maxDate, calendar: Calendar.current)
     let dateQuestionStep = ORKQuestionStep(identifier: "DateStep", title: dateQuestion, answer: dateAnswer)
+    dateQuestionStep.isOptional = false
     steps += [dateQuestionStep]
     
     //Race Question
@@ -78,6 +83,7 @@ public var DemographicsSurvey: ORKOrderedTask {
     
     let raceAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoice)
     let raceQuestionStep = ORKQuestionStep(identifier: "RaceStep", title: "What is your race?", answer: raceAnswerFormat)
+    raceQuestionStep.isOptional = false
     steps += [raceQuestionStep]
     
     //Education Question
@@ -91,11 +97,12 @@ public var DemographicsSurvey: ORKOrderedTask {
     let eduAnswerFormat:
         ORKTextChoiceAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoice)
     let eduQuestionStep = ORKQuestionStep(identifier: "eduStep", title: "What is the highest grade or level of schooling that you have completed?", answer: eduAnswerFormat)
+    eduQuestionStep.isOptional = false
     steps += [eduQuestionStep]
     
     
     //Summary
-    let completionStep = ORKCompletionStep(identifier: "SummaryStep")
+    let completionStep = ORKCompletionStep(identifier: "DemographicSummaryStep")
     completionStep.title = "Thank You!!"
     completionStep.text = "You have completed the survey"
     steps += [completionStep]

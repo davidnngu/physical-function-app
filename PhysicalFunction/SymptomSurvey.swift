@@ -15,7 +15,7 @@ public var SymptomSurvey: ORKOrderedTask {
     var steps = [ORKStep]()
     
     //Introduction
-    let instructionStep = ORKInstructionStep(identifier: "IntroStep")
+    let instructionStep = ORKInstructionStep(identifier: "SymptomIntroStep")
     instructionStep.title = "Symptom Severity Survey"
     instructionStep.text = "Answer nine questions to complete the survey."
     steps += [instructionStep]
@@ -37,12 +37,13 @@ public var SymptomSurvey: ORKOrderedTask {
         ]
         let questAnswerFormat: ORKTextChoiceAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoice)
         let questQuestionStep = ORKQuestionStep(identifier: "QuestionStep\(questionNumber)", title: textChoiceQuestion, answer: questAnswerFormat)
+        questQuestionStep.isOptional = false
         steps += [questQuestionStep]
         questionNumber+=1
     }
     
     //Summary
-    let completionStep = ORKCompletionStep(identifier: "SummaryStep")
+    let completionStep = ORKCompletionStep(identifier: "SymptomSummaryStep")
     completionStep.title = "Thank You!!"
     completionStep.text = "You have completed the survey"
     steps += [completionStep]
