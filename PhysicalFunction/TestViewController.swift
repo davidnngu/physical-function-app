@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import ResearchKit
+import Firebase
 
 class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
 
@@ -16,8 +17,11 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     
+    
     var taskResultFinishedCompletionHandler: ((ORKResult) -> Void)?
     var tempString = String()
+    let userID = Auth.auth().currentUser?.uid
+    let email = Auth.auth().currentUser?.email
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,11 +95,11 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
             if (stepResult.identifier == "PROMISSummaryStep") {
                 savedResults.calcResultScore()
                 tabbar.valuePFScore = String("\(savedResults.resultScore)")
-                print(tabbar.valuePFScore)
+                //print(tabbar.valuePFScore)
                 savedResults.isPROMIS = true
+                savedResults.sendToFirebase()
             }
             else if (stepResult.identifier != "PROMISIntroStep") {
-                
                 for result in stepResult.results! {
                     let RKResult = result as! ORKChoiceQuestionResult
                     //print(aResult.answer!)
@@ -120,9 +124,10 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "SymptomSummaryStep") {
-                
+                savedResults.isSymptoms = true
             }
             else if (stepResult.identifier != "SymptomIntroStep") {
+                
                 for result in stepResult.results! {
                     let RKResult = result as! ORKChoiceQuestionResult
                     
@@ -146,9 +151,10 @@ class TestViewController: UIViewController, ORKTaskViewControllerDelegate {
         for stepResult in results! as! [ORKStepResult]
         {
             if (stepResult.identifier == "DemographicSummaryStep") {
-                
+                savedResults.isDemo = true
             }
             else if (stepResult.identifier != "DemographicIntroStep") {
+                
                 for result in stepResult.results! {
                     let id = result.identifier
                     var RKResult: ORKQuestionResult?
@@ -196,6 +202,10 @@ public struct surveyResults {
     var resultAvg = 0
     var resultScore = 0.0
     var isPROMIS = false
+    var isSymptoms = false
+    var isDemo = false
+    let userID = Auth.auth().currentUser?.uid
+    let email = Auth.auth().currentUser?.email
     
     init(result: ORKTaskResult) {
         allResults = result
@@ -211,6 +221,21 @@ public struct surveyResults {
     mutating func calcResultScore() {
         calcResultTotal()
         resultScore = convertRawtoTScore(score: resultTotal)
+        
+    }
+    
+    mutating func sendToFirebase() {
+        let docref = Firestore.firestore().document("users/\(email ?? "0")")
+        if (isPROMIS == true) {
+            let dataToSave = ["PROMIS PF10": resultsList, "PFScore": resultScore] as [String : Any]
+            docref.setData(dataToSave)
+        } else if (isSymptoms == true) {
+            let dataToSave = ["Symptoms": resultsList] as [String: Any]
+            docref.setData(dataToSave)
+        } else {
+            let dataToSave = ["Demographics": resultsList] as [String: Any]
+            docref.setData(dataToSave)
+        }
     }
     
     func convertRawtoTScore(score: Int) -> Double {

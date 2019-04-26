@@ -13,6 +13,9 @@ import FirebaseAuth
 
 class LoginSuccessController: UIViewController {
     
+    var ref: DatabaseReference!
+    
+    
     @IBOutlet weak var userEmail: UILabel!
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -24,6 +27,8 @@ class LoginSuccessController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         view.addGestureRecognizer(tap)
         view.isUserInteractionEnabled = true
+        
+        
     }
  
     @objc func handleTap(_ sender: UITapGestureRecognizer) {

@@ -108,7 +108,7 @@ class Model: AuthHandlerType {
             return 0
         }
         
-        let id = token!.user_id!
+        let id = token!.user_id
         var heartComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
         heartComponents!.path = "/1/user/\(id)/activities/heart/date/today/1d.json"
         
