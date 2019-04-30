@@ -31,7 +31,6 @@
 		63B6387C225EA9A7002F2EFB /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B6387B225EA9A7002F2EFB /* Model.swift */; };
 		63B6387E225EA9DB002F2EFB /* AuthHandlerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B6387D225EA9DB002F2EFB /* AuthHandlerType.swift */; };
 		63B63880225EAA0E002F2EFB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B6387F225EAA0E002F2EFB /* Constants.swift */; };
-		63B63882225EBA65002F2EFB /* FitbitAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63881225EBA65002F2EFB /* FitbitAPI.swift */; };
 		63B63888225EC1C0002F2EFB /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B63887225EC1C0002F2EFB /* CircleView.swift */; };
 		63E8DE822266C34500FE999C /* SymptomSurvey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E8DE812266C34500FE999C /* SymptomSurvey.swift */; };
 		63E8DE842266CCFB00FE999C /* DemographicsSurvey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E8DE832266CCFA00FE999C /* DemographicsSurvey.swift */; };
@@ -63,7 +62,6 @@
 		63B6387B225EA9A7002F2EFB /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		63B6387D225EA9DB002F2EFB /* AuthHandlerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHandlerType.swift; sourceTree = "<group>"; };
 		63B6387F225EAA0E002F2EFB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		63B63881225EBA65002F2EFB /* FitbitAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitbitAPI.swift; sourceTree = "<group>"; };
 		63B63887225EC1C0002F2EFB /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
 		63E8DE812266C34500FE999C /* SymptomSurvey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymptomSurvey.swift; sourceTree = "<group>"; };
 		63E8DE832266CCFA00FE999C /* DemographicsSurvey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemographicsSurvey.swift; sourceTree = "<group>"; };
@@ -126,7 +124,6 @@
 				63B6387B225EA9A7002F2EFB /* Model.swift */,
 				63B6387D225EA9DB002F2EFB /* AuthHandlerType.swift */,
 				63B6387F225EAA0E002F2EFB /* Constants.swift */,
-				63B63881225EBA65002F2EFB /* FitbitAPI.swift */,
 				633F318A226D535F008D3501 /* HeartDataModel.swift */,
 				633F3188226D5342008D3501 /* StepDataModel.swift */,
 				63B63887225EC1C0002F2EFB /* CircleView.swift */,
@@ -338,7 +335,6 @@
 				6341ED15226D080700944F82 /* SignUpViewController.swift in Sources */,
 				63E8DE822266C34500FE999C /* SymptomSurvey.swift in Sources */,
 				63B63880225EAA0E002F2EFB /* Constants.swift in Sources */,
-				63B63882225EBA65002F2EFB /* FitbitAPI.swift in Sources */,
 				6397B225224835DC00E26DDB /* ExerciseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

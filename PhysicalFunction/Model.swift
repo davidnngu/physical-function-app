@@ -20,6 +20,7 @@ class Model: AuthHandlerType {
     var stepData:Step? = nil
     var weeklyStepData:Step? = nil
     var monthlyStepData:Step? = nil
+    var averageMonthlyHeartRate: Int = 0
     
     
     func auth(_ completion: @escaping ((String?, Error?) -> Void)) {
@@ -108,7 +109,7 @@ class Model: AuthHandlerType {
             return 0
         }
         
-        let id = token!.user_id
+        let id = token!.user_id!
         var heartComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
         heartComponents!.path = "/1/user/\(id)/activities/heart/date/today/1d.json"
         
@@ -117,19 +118,16 @@ class Model: AuthHandlerType {
         request.httpMethod = "GET"
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
-        //print(request)
-        
+        let semaphore = DispatchSemaphore(value : 0)
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            // guard let check = response.self else {return}
-            //print(check)
-            //print(data)
+            
             
             do {
                 self.heartData = try JSONDecoder().decode(HeartRate.self, from: data)
-                //print(self.heartData?.activitiesHeart[0].value.heartRateZones[0].max)
+                semaphore.signal()
             }
                 
             catch let jsonErr{
@@ -137,6 +135,7 @@ class Model: AuthHandlerType {
             }
         }
         task.resume()
+        _ = semaphore.wait(timeout: .distantFuture)
         return self.heartData?.activitiesHeart[0].value.restingHeartRate
     }
     
@@ -147,47 +146,44 @@ class Model: AuthHandlerType {
         
         let id = token!.user_id!
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YYYY-MM-dd"
-        let currentDate = Date()
-        let today = dateFormatter.string(from: currentDate)
-        
         var stepComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
-        stepComponents!.path = "/1/user/\(id)/activities/date/\(today).json"
+        stepComponents!.path = "/1/user/\(id)/activities/tracker/steps/date/today/1d.json"
         
         guard let stepURL = stepComponents?.url else { return 0 }
         var request = URLRequest(url: stepURL)
         request.httpMethod = "GET"
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
-        
+        var actualStep: Int = 0
+        let semaphore = DispatchSemaphore(value : 0)
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            //            guard let check = response.self else {return}
-            //            print(check)
-            //print(data)
             
             do {
                 self.stepData = try JSONDecoder().decode(Step.self, from: data)
+                actualStep = Int(self.stepData?.activitiesTrackerSteps[0].value ?? "") ?? 0
+                semaphore.signal()
                 
             }
                 
             catch let jsonErr{
-                print("Error serializing json:", jsonErr)
+                print("Error serializing daily step json:", jsonErr)
             }
         }
         task.resume()
-        return stepData?.summary.steps
+        _ = semaphore.wait(timeout: .distantFuture)
+        return actualStep
     }
     
-    func getWeeklyHeartData() -> Int?{
+    func getWeeklyHeartRate() -> Int? {
         guard let apiURL = Constants.apiURL else {
             return 0
         }
         
         let id = token!.user_id!
+        let semaphore = DispatchSemaphore(value : 0)
         var heartComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
         heartComponents!.path = "/1/user/\(id)/activities/heart/date/today/1w.json"
         
@@ -196,19 +192,21 @@ class Model: AuthHandlerType {
         request.httpMethod = "GET"
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
-        //print(request)
-        
+        var averageHeartRate: Int = 0
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            // guard let check = response.self else {return}
-            //print(check)
-            //print(data)
+            
             
             do {
                 self.weeklyHeartData = try JSONDecoder().decode(HeartRate.self, from: data)
-                //print(self.heartData?.activitiesHeart[0].value.heartRateZones[0].max)
+                for i in 0..<29 {
+                    let temp: Int = Int(self.monthlyHeartData?.activitiesHeart[i].value.restingHeartRate ?? 0)
+                    averageHeartRate = averageHeartRate + temp
+                }
+                averageHeartRate = averageHeartRate/7
+                semaphore.signal()
             }
                 
             catch let jsonErr{
@@ -216,11 +214,12 @@ class Model: AuthHandlerType {
             }
         }
         task.resume()
-        return self.weeklyHeartData?.activitiesHeart[0].value.restingHeartRate
+        _ = semaphore.wait(timeout: .distantFuture)
+        return averageHeartRate
     }
     
     
-    func getMonthlyHeartDate() -> Int?{
+    func getMonthlyHeartRate() -> Int?{
         guard let apiURL = Constants.apiURL else {
             return 0
         }
@@ -232,20 +231,26 @@ class Model: AuthHandlerType {
         guard let heartURL = heartComponents?.url else { return 0 }
         var request = URLRequest(url: heartURL)
         request.httpMethod = "GET"
+        var temp2: Int = 0
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
-        //print(request)
+        
+        
+        let semaphore = DispatchSemaphore(value : 0)
         
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            // guard let check = response.self else {return}
-            //print(check)
-            //print(data)
             
             do {
                 self.monthlyHeartData = try JSONDecoder().decode(HeartRate.self, from: data)
+                for i in 0..<29 {
+                    let temp: Int = Int(self.monthlyHeartData?.activitiesHeart[i].value.restingHeartRate ?? 0)
+                    temp2 =  temp2 + temp
+                }
+                self.averageMonthlyHeartRate = temp2/30
+                semaphore.signal()
             }
                 
             catch let jsonErr{
@@ -253,23 +258,20 @@ class Model: AuthHandlerType {
             }
         }
         task.resume()
-        return self.monthlyHeartData?.activitiesHeart[0].value.restingHeartRate
+        
+        _ = semaphore.wait(timeout: .distantFuture)
+        return self.averageMonthlyHeartRate
     }
     
-    func getWeeklyStep() -> Int?{
+    func getWeeklyStep() -> Int? {
         guard let apiURL = Constants.apiURL else {
             return 0
         }
         
         let id = token!.user_id!
-        
-        //let dateFormatter = DateFormatter()
-        //dateFormatter.dateFormat = "YYYY-MM-dd"
-        // let currentDate = Date()
-        // let today = dateFormatter.string(from: currentDate)
-        
         var stepComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
-        stepComponents!.path = "/1/user/\(id)/activities/date/today/1w.json"
+        stepComponents!.path = "/1/user/\(id)/activities/tracker/steps/date/today/1w.json"
+        var averageWeeklySteps: Int = 0
         
         guard let stepURL = stepComponents?.url else { return 0 }
         var request = URLRequest(url: stepURL)
@@ -277,25 +279,34 @@ class Model: AuthHandlerType {
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
         
+        let semaphore = DispatchSemaphore(value : 0)
+        
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            //            guard let check = response.self else {return}
-            //            print(check)
-            //print(data)
+            
             
             do {
                 self.weeklyStepData = try JSONDecoder().decode(Step.self, from: data)
+                semaphore.signal()
                 
             }
                 
             catch let jsonErr{
-                print("Error serializing json:", jsonErr)
+                print("Error serializing weekly step json:", jsonErr)
             }
         }
+        
         task.resume()
-        return weeklyStepData?.summary.steps
+        
+        for i in 0..<6{
+            let temp = Int(self.weeklyStepData?.activitiesTrackerSteps[i].value ?? "error") ?? 0
+            averageWeeklySteps = averageWeeklySteps + temp
+        }
+        averageWeeklySteps = averageWeeklySteps/7
+        _ = semaphore.wait(timeout: .distantFuture)
+        return averageWeeklySteps
     }
     
     
@@ -307,32 +318,37 @@ class Model: AuthHandlerType {
         let id = token!.user_id!
         
         var stepComponents = URLComponents(url: apiURL, resolvingAgainstBaseURL: false)
-        stepComponents!.path = "/1/user/\(id)/activities/date/today/1m).json"
-        
+        stepComponents!.path = "/1/user/\(id)/activities/tracker/steps/date/today/1m.json"
+        var averageSteps:Int = 0
         guard let stepURL = stepComponents?.url else { return 0 }
         var request = URLRequest(url: stepURL)
         request.httpMethod = "GET"
         let accToken = token!.access_token!
         request.addValue("Bearer \(accToken)", forHTTPHeaderField: "Authorization")
         
+        let semaphore = DispatchSemaphore(value : 0)
         let task = URLSession.shared.dataTask(with: request){
             (data, response, error) in
             
             guard let data = data.self else { return }
-            //            guard let check = response.self else {return}
-            //            print(check)
-            //print(data)
             
             do {
                 self.monthlyStepData = try JSONDecoder().decode(Step.self, from: data)
+                semaphore.signal()
                 
             }
                 
             catch let jsonErr{
-                print("Error serializing json:", jsonErr)
+                print("Error serializing monthly step json: ", jsonErr)
             }
         }
         task.resume()
-        return monthlyStepData?.summary.steps
+        for i in 0..<29{
+            let temp = Int(self.monthlyStepData?.activitiesTrackerSteps[i].value ?? "error") ?? 0
+            averageSteps = averageSteps + temp
+        }
+        averageSteps = averageSteps/30
+        _ = semaphore.wait(timeout: .distantFuture)
+        return averageSteps
     }
 }
